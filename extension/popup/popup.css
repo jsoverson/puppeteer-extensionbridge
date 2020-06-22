@@ -1,0 +1,30 @@
+body {
+  margin: 5px 10px 10px;
+  padding: 4px;
+}
+
+html {
+  width: 400px;
+}
+
+h1 {
+  text-align: center;
+}
+
+.event-dir img {
+  width: 10px;
+}
+
+.event-dir {
+  margin-right: 1em;
+  margin-left: .5em
+}
+
+.event-what {
+  margin-right: 1em;
+}
+
+ol {
+  margin-left: 1em;
+  padding: 0;
+}

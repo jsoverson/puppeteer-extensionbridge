@@ -1,0 +1,100 @@
+{
+  "name": "Puppeteer Extension Controller",
+  "version": "0.4",
+  "description": "Communication bridge between Puppeteer and Chrome extension APIs",
+  "key": "aaaabbbbccccddddeeeeffffgggghhhh",
+  "browser_action": {
+    "default_icon": "images/icon16.png",
+    "default_popup": "popup/popup.html"
+  },
+  "chrome_url_overrides": {
+    "newtab": "newtab/index.html"
+  },
+  "//content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "contentScript.js"
+      ]
+    }
+  ],
+  "icons": {
+    "16": "images/icon16.png",
+    "32": "images/icon32.png",
+    "48": "images/icon48.png",
+    "128": "images/icon128.png"
+  },
+  "background": {
+    "scripts": [
+      "background.js"
+    ]
+  },
+  "permissions": [
+    "<all_urls>",
+    "activeTab",
+    "alarms",
+    "background",
+    "bookmarks",
+    "browsingData",
+    "certificateProvider",
+    "clipboardRead",
+    "clipboardWrite",
+    "contentSettings",
+    "contextMenus",
+    "cookies",
+    "debugger",
+    "declarativeContent",
+    "declarativeNetRequest",
+    "declarativeWebRequest",
+    "desktopCapture",
+    "displaySource",
+    "dns",
+    "documentScan",
+    "downloads",
+    "enterprise.deviceAttributes",
+    "enterprise.hardwarePlatform",
+    "enterprise.platformKeys",
+    "experimental",
+    "fileBrowserHandler",
+    "fileSystemProvider",
+    "fontSettings",
+    "gcm",
+    "geolocation",
+    "history",
+    "identity",
+    "idle",
+    "idltest",
+    "management",
+    "nativeMessaging",
+    "networking.config",
+    "notifications",
+    "pageCapture",
+    "platformKeys",
+    "power",
+    "printerProvider",
+    "privacy",
+    "processes",
+    "proxy",
+    "sessions",
+    "signedInDevices",
+    "storage",
+    "system.cpu",
+    "system.display",
+    "system.memory",
+    "system.storage",
+    "tabCapture",
+    "tabs",
+    "topSites",
+    "tts",
+    "ttsEngine",
+    "unlimitedStorage",
+    "vpnProvider",
+    "wallpaper",
+    "webNavigation",
+    "webRequest",
+    "webRequestBlocking"
+  ],
+  "manifest_version": 2
+}

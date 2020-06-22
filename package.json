@@ -20,23 +20,27 @@
   },
   "files": [
     "README.md",
-    "dist/**/*"
+    "dist/**/*",
+    "extension/**/*",
+    "example.ts"
   ],
   "keywords": [
     "puppeteer",
     "extension",
+    "chrome extension",
+    "chrome.runtime",
     "chrome"
   ],
   "license": "ISC",
   "dependencies": {
-    "@types/debug": "^4.1.5"
+    "find-root": "^1.1.0",
+    "debug": "^4.1.1"
   },
   "devDependencies": {
     "@types/find-root": "^1.1.1",
     "@types/mocha": "^7.0.2",
     "@types/serve-handler": "^6.1.0",
-    "debug": "^4.1.1",
-    "find-root": "^1.1.0",
+    "@types/debug": "^4.1.5",
     "mocha": "^7.1.1",
     "prettier": "^2.0.5",
     "puppeteer": "^4.0.0",

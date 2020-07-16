@@ -1,13 +1,12 @@
-
-import { Page } from 'puppeteer/lib/Page';
-import { ConsoleMessage } from 'puppeteer/lib/ConsoleMessage';
+import { Page } from 'puppeteer/lib/cjs/common/Page';
+import { ConsoleMessage } from 'puppeteer/lib/cjs/common/ConsoleMessage';
 import path from 'path';
 import findRoot from 'find-root';
 import DEBUG from 'debug';
-import { LaunchOptions, BrowserOptions, ChromeArgOptions } from 'puppeteer/lib/launcher/LaunchOptions';
-import { Browser } from 'puppeteer/lib/Browser';
-import { CDPSession, Connection } from 'puppeteer/lib/Connection';
-import { Target } from 'puppeteer/lib/Target';
+import { Browser } from 'puppeteer/lib/cjs/common/Browser';
+import { CDPSession, Connection } from 'puppeteer/lib/cjs/common/Connection';
+import { Target } from 'puppeteer/lib/cjs/common/Target';
+import { BrowserOptions, LaunchOptions, ChromeArgOptions } from 'puppeteer/lib/cjs/node/LaunchOptions';
 
 type PuppeteerLaunchOptions = LaunchOptions & BrowserOptions & ChromeArgOptions;
 
@@ -32,7 +31,7 @@ export class ExtensionBridge {
   page?: Page;
   private exposedFunctionIndex = 0;
   private exposedFunctionMap = new WeakMap<Function, string>();
-  private exposedFunctionPrefix = "extensionBridge_";
+  private exposedFunctionPrefix = 'extensionBridge_';
 
   constructor(page?: Page) {
     if (!page) debug('ExtensionBridge instantiated with invalid page object');
@@ -51,18 +50,19 @@ export class ExtensionBridge {
     try {
       const message = {
         expression: expression,
+        // @ts-ignore I effing hate private fields.
         contextId: context._contextId,
         returnByValue: true,
         userGesture: true,
         awaitPromise: true,
-        matchAboutBlank: true
+        matchAboutBlank: true,
       };
       debug('sending message to extension %o', message);
-      const rv = await session.send('Runtime.evaluate', message) as { result: { value: any } };
+      const rv = (await session.send('Runtime.evaluate', message)) as { result: { value: any } };
       return rv.result.value as any;
     } catch (e) {
-      debug('ExtensionBridge: send failed %o', e.message)
-      throw (e);
+      debug('ExtensionBridge: send failed %o', e.message);
+      throw e;
     }
   }
 
@@ -76,7 +76,7 @@ export class ExtensionBridge {
     try {
       json = JSON.stringify(obj);
     } catch (e) {
-      console.log(`puppeteer-extensionbridge could not stringify payload for ${obj}.`)
+      console.log(`puppeteer-extensionbridge could not stringify payload for ${obj}.`);
       throw e;
     }
     return this.sendMessage(`bridge.setConfig(${json})`);
@@ -87,7 +87,7 @@ export class ExtensionBridge {
     try {
       json = JSON.stringify(payload);
     } catch (e) {
-      console.log(`puppeteer-extensionbridge could not stringify payload ${payload}.`)
+      console.log(`puppeteer-extensionbridge could not stringify payload ${payload}.`);
       throw e;
     }
     return this.sendMessage(`bridge.handle("${endpoint}", ${json})`);
@@ -110,18 +110,28 @@ export class ExtensionBridge {
 }
 
 export class NullExtensionBridge extends ExtensionBridge {
-  async getConfig(): Promise<any> { }
-  async setConfig() { return { value: [] } }
-  async send() { return { value: [] } }
-  async addListener() { return { value: [] } }
-  async removeListener() { return { value: [] } }
+  async getConfig(): Promise<any> {}
+  async setConfig() {
+    return { value: [] };
+  }
+  async send() {
+    return { value: [] };
+  }
+  async addListener() {
+    return { value: [] };
+  }
+  async removeListener() {
+    return { value: [] };
+  }
 }
 
 export function mergeLaunchOptions(options: PuppeteerLaunchOptions) {
   const extensionPath = path.join(findRoot(__dirname), 'extension');
   if (!('headless' in options) || options.headless) {
     // Throw on this, adding it magically causes confusion.
-    throw new Error('puppeteer-extensionbridge has to run in GUI (non-headless) mode. Add `headless:false` puppeteer\'s launch options')
+    throw new Error(
+      "puppeteer-extensionbridge has to run in GUI (non-headless) mode. Add `headless:false` puppeteer's launch options",
+    );
   }
   if (options.ignoreDefaultArgs) {
     if (Array.isArray(options.ignoreDefaultArgs)) {
@@ -130,49 +140,51 @@ export function mergeLaunchOptions(options: PuppeteerLaunchOptions) {
         debug('Adding --disable-extensions to ignoreDefaultArgs');
         options.ignoreDefaultArgs.push('--disable-extensions');
       }
-
     }
   } else {
     debug('Setting ignoreDefaultArgs to ["--disable-extensions"]');
-    options.ignoreDefaultArgs = [`--disable-extensions`]
+    options.ignoreDefaultArgs = [`--disable-extensions`];
   }
 
   if (options.args) {
-    const loadExtensionIndex = options.args.findIndex(a => a.startsWith('--load-extension'));
+    const loadExtensionIndex = options.args.findIndex((a: string) => a.startsWith('--load-extension'));
     if (loadExtensionIndex > -1) {
       debug(`Appending ${extensionPath} to --load-extension arg`);
       options.args[loadExtensionIndex] += `,${extensionPath}`;
     } else {
       debug(`Adding arg '--load-extension=${extensionPath}`);
-      options.args.push(`--load-extension=${extensionPath}`)
+      options.args.push(`--load-extension=${extensionPath}`);
     }
-    const whitelistExtensionIndex = options.args.findIndex(a => a.startsWith('--whitelisted-extension-id'));
+    const whitelistExtensionIndex = options.args.findIndex((a: string) => a.startsWith('--whitelisted-extension-id'));
     if (whitelistExtensionIndex > -1) {
       debug(`Appending extensionbridge id (${extensionId}) to --whitelisted-extension-id`);
       options.args[whitelistExtensionIndex] += `,${extensionId}`;
     } else {
       debug(`Adding arg --whitelisted-extension-id=${extensionId}`);
-      options.args.push(`--whitelisted-extension-id=${extensionId}`)
+      options.args.push(`--whitelisted-extension-id=${extensionId}`);
     }
   } else {
     debug(`Adding args --whitelisted-extension-id=${extensionId} and --load-extension=${extensionPath}`);
-    options.args = [
-      `--load-extension=${extensionPath}`,
-      `--whitelisted-extension-id=${extensionId}`
-    ];
+    options.args = [`--load-extension=${extensionPath}`, `--whitelisted-extension-id=${extensionId}`];
   }
   return options;
 }
 
-export async function decorateBrowser(browser: Browser, config?: PluginConfig): Promise<Browser & BrowserExtensionBridge> {
+export async function decorateBrowser(
+  browser: Browser,
+  config?: PluginConfig,
+): Promise<Browser & BrowserExtensionBridge> {
   debug(`waiting for extension's background page`);
-  const extTarget = await browser.waitForTarget(t => {
+  const extTarget = await browser.waitForTarget((t) => {
     // @ts-ignore
-    return t.type() === 'background_page' && t._targetInfo.title === "Puppeteer Extension Controller"
+    return t.type() === 'background_page' && t._targetInfo.title === 'Puppeteer Extension Controller';
   });
   debug(`background page found, id: ${extTarget._targetId}`);
   const extPage = await extTarget.page();
-  if (!extPage) throw new Error(`puppeteer-extensionbridge failed to find the extension's background page. If this happened during normal use, it is a bug and should be reported.`);
+  if (!extPage)
+    throw new Error(
+      `puppeteer-extensionbridge failed to find the extension's background page. If this happened during normal use, it is a bug and should be reported.`,
+    );
   const bridge = new ExtensionBridge(extPage);
   debug(`passed config: %o`, config);
   if (config) {

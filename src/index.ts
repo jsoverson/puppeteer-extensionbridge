@@ -1,12 +1,12 @@
-import { Page } from 'puppeteer/lib/cjs/common/Page';
-import { ConsoleMessage } from 'puppeteer/lib/cjs/common/ConsoleMessage';
+import { Page } from 'puppeteer/lib/cjs/puppeteer/common/Page';
+import { ConsoleMessage } from 'puppeteer/lib/cjs/puppeteer/common/ConsoleMessage';
 import path from 'path';
 import findRoot from 'find-root';
 import DEBUG from 'debug';
-import { Browser } from 'puppeteer/lib/cjs/common/Browser';
-import { CDPSession, Connection } from 'puppeteer/lib/cjs/common/Connection';
-import { Target } from 'puppeteer/lib/cjs/common/Target';
-import { BrowserOptions, LaunchOptions, ChromeArgOptions } from 'puppeteer/lib/cjs/node/LaunchOptions';
+import { Browser } from 'puppeteer/lib/cjs/puppeteer/common/Browser';
+import { CDPSession, Connection } from 'puppeteer/lib/cjs/puppeteer/common/Connection';
+import { Target } from 'puppeteer/lib/cjs/puppeteer/common/Target';
+import { BrowserOptions, LaunchOptions, ChromeArgOptions } from 'puppeteer/lib/cjs/puppeteer/node/LaunchOptions';
 
 type PuppeteerLaunchOptions = LaunchOptions & BrowserOptions & ChromeArgOptions;
 

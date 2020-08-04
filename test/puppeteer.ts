@@ -1,8 +1,8 @@
-import { Puppeteer } from 'puppeteer/lib/cjs/common/Puppeteer';
+import { Puppeteer } from 'puppeteer/lib/cjs/puppeteer/common/Puppeteer';
 import findRoot from 'find-root';
 import path from 'path';
 
-import { initializePuppeteer } from 'puppeteer/lib/cjs/initialize';
+import { initializePuppeteer } from 'puppeteer/lib/cjs/puppeteer/initialize';
 
 const puppeteer = initializePuppeteer('puppeteer');
 

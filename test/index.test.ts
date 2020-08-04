@@ -4,7 +4,7 @@ import puppeteer from './puppeteer';
 
 import { decorateBrowser, mergeLaunchOptions, BrowserExtensionBridge } from '../src';
 import { start, TestServer } from '@jsoverson/test-server';
-import { Browser } from 'puppeteer/lib/cjs/common/Browser';
+import { Browser } from 'puppeteer/lib/cjs/puppeteer/common/Browser';
 
 describe('Extension Bridge', function () {
   let browser: Browser & BrowserExtensionBridge;

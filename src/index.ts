@@ -6,9 +6,9 @@ import DEBUG from 'debug';
 import { Browser } from 'puppeteer/lib/cjs/puppeteer/common/Browser';
 import { CDPSession, Connection } from 'puppeteer/lib/cjs/puppeteer/common/Connection';
 import { Target } from 'puppeteer/lib/cjs/puppeteer/common/Target';
-import { BrowserOptions, LaunchOptions, ChromeArgOptions } from 'puppeteer/lib/cjs/puppeteer/node/LaunchOptions';
+import { BrowserLaunchArgumentOptions, LaunchOptions, PuppeteerNodeLaunchOptions } from 'puppeteer/lib/cjs/puppeteer/node/LaunchOptions';
 
-type PuppeteerLaunchOptions = LaunchOptions & BrowserOptions & ChromeArgOptions;
+type PuppeteerLaunchOptions = LaunchOptions & BrowserLaunchArgumentOptions & PuppeteerNodeLaunchOptions;
 
 const debug = DEBUG('puppeteer:extensionbridge');
 
